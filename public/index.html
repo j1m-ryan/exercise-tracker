@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercise Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <img src="pulse.png" alt="Pulse icon" id="pulseLogo" />
+      <h1>Exercise Tracker</h1>
+    </header>
+    <section id="boxes">
+      <section id="newUserBox">
+        <h2>Create New User</h2>
+        <code>POST /api/exercise/new-user</code><br />
+        <input
+          type="text"
+          id="uname"
+          name="uname"
+          placeholder="username"
+        /><br />
+        <button>submit</button>
+      </section>
+      <section id="addExercisesBoc">
+        <h2>Add exercises</h2>
+        <code>POST /api/exercise/add</code><br />
+        <input placeholder="userId*" /><br />
+        <input placeholder="description*" /><br />
+        <input placeholder="duration* (minutes)" /><br />
+        <input placeholder="date (yyyy-mm-dd)" /><br />
+        <button>submit</button>
+      </section>
+    </section>
+  </body>
+</html>

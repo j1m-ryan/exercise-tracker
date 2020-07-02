@@ -1,0 +1,34 @@
+header {
+  display: flex;
+  justify-content: center;
+}
+h1 {
+  font-family: "Montserrat", sans-serif;
+  color: orangered;
+}
+h2 {
+  font-family: "Montserrat", sans-serif;
+  color: orangered;
+}
+
+#pulseLogo {
+  width: 45px;
+  height: 45px;
+  margin-top: 16px;
+  margin-right: 20px;
+}
+#boxes {
+  display: flex;
+  justify-content: space-around;
+}
+
+#newUserBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#addExercisesBoc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
