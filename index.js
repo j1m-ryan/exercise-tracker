@@ -4,11 +4,14 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
 const { Person } = require("./person");
+const { Exercise } = require("./exercise");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-mongoose.connect("mongodb://localhost:27017/persons");
+mongoose.connect("mongodb://localhost:27017/persons", {
+  useNewUrlParser: true,
+});
 
 app.get("/", (req, res) => {
   const fileLocation = path.join(__dirname, "./public/index.html");
@@ -42,21 +45,23 @@ app.post("/api/exercise/add", async (req, res) => {
   const date = req.body.date;
 
   try {
-    const exisitngPerson = Person.findById({ userId });
+    const exisitngPerson = await Person.findById(userId);
     if (exisitngPerson) {
-      await Person.findByIdAndUpdate(userId, { exercised: true }).exec();
+      const newExercise = new Exercise({
+        description: description,
+        duration: duration,
+      });
+      await Person.update(exisitngPerson, {
+        $push: { exercises: newExercise },
+      });
+      return res.json({ success: "user found and updated" });
+    } else {
+      res.json({ error: "user not found" });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json("Server error");
+    res.json({ error: "server error" });
   }
-
-  res.json({
-    userId: userId,
-    description: description,
-    duration: duration,
-    date: date,
-  });
 });
 
 app.get("/api/exercise/:log", (req, res) => {
