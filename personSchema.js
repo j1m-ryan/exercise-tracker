@@ -3,6 +3,6 @@ const { exerciseSchema } = require("./exerciseSchema");
 
 const personSchema = new mongoose.Schema({
   name: { type: String, unique: true, required: true },
+  exerciseList: [exerciseSchema],
 });
-personSchema.add([exerciseSchema]);
 module.exports.personSchema = personSchema;
