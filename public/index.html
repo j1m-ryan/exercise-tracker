@@ -32,11 +32,21 @@
       <section id="addExercisesBox">
         <h2>Add exercises</h2>
         <code>POST /api/exercise/add</code><br />
-        <input placeholder="userId*" /><br />
-        <input placeholder="description*" /><br />
-        <input placeholder="duration* (minutes)" /><br />
-        <input placeholder="date (yyyy-mm-dd)" /><br />
-        <button>submit</button>
+        <form method="POST" action="/api/exercise/add">
+          <input id="userId" name="userId" placeholder="userId*" /><br />
+          <input
+            id="description"
+            name="description"
+            placeholder="description*"
+          /><br />
+          <input
+            id="duration"
+            name="duration"
+            placeholder="duration* (minutes)"
+          /><br />
+          <input id="date" name="date" placeholder="date (yyyy-mm-dd)" /><br />
+          <button>submit</button>
+        </form>
       </section>
     </section>
     <section class="bottomText">

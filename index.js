@@ -8,25 +8,59 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-mongoose.connect("mongodb://localhost:27017/exercise");
-
-const person = new Person({ name: "john" });
-person.save();
+mongoose.connect("mongodb://localhost:27017/persons");
 
 app.get("/", (req, res) => {
   const fileLocation = path.join(__dirname, "./public/index.html");
   res.sendFile(fileLocation);
 });
 
-//TODO make ID hash
-//TODO search mongo for username
-// if found send back exists json
-// else make a hash
-// && send back a json object with username and hashID
-app.post("/api/exercise/new-user", (req, res) => {
+app.post("/api/exercise/new-user", async (req, res) => {
   const userName = req.body.username;
-  const userJson = { user: userName, id: 08309832 };
-  res.json(userJson);
+
+  try {
+    const exisitngPerson = await Person.findOne({ name: userName });
+
+    if (exisitngPerson) {
+      return res.json({ info: "person already added" });
+    } else {
+      const newPerson = new Person({ name: userName });
+      newPerson.save();
+      const personObj = { name: userName, id: newPerson._id };
+      return res.json(personObj);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("Server error");
+  }
+});
+
+app.post("/api/exercise/add", async (req, res) => {
+  const userId = req.body.userId;
+  const description = req.body.description;
+  const duration = req.body.duration;
+  const date = req.body.date;
+
+  try {
+    const exisitngPerson = Person.findById({ userId });
+    if (exisitngPerson) {
+      await Person.findByIdAndUpdate(userId, { exercised: true }).exec();
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("Server error");
+  }
+
+  res.json({
+    userId: userId,
+    description: description,
+    duration: duration,
+    date: date,
+  });
+});
+
+app.get("/api/exercise/:log", (req, res) => {
+  res.send(req.params.log);
 });
 
 app.listen(3000, () => {
