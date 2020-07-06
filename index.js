@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const moment = require("moment");
 const app = express();
 const { Person } = require("./person");
 app.use(express.static("public"));
@@ -41,7 +42,11 @@ app.post("/api/exercise/add", async (req, res) => {
   const userId = req.body.userId;
   const description = req.body.description;
   const duration = req.body.duration;
-  const date = Date.parse(req.body.date);
+  const date =
+    req.body.date != undefined &&
+    moment(req.body.date, "DD-MM-YYYY", true).isValid()
+      ? Date.parse(req.body.date).toString()
+      : "No date given";
 
   try {
     const exisitngPerson = await Person.findById(userId);
@@ -66,16 +71,15 @@ app.post("/api/exercise/add", async (req, res) => {
 });
 
 app.get("/api/exercise/log", async (req, res) => {
-  const userId = req.body.userId;
-  console.log(userId);
-  const from = req.body.from;
-  const to = req.body.to;
-  const limit = req.body.limit;
+  const userId = req.query.userId;
+  const from = req.query.from;
+  const to = req.query.to;
+  const limit = req.query.limit;
 
   try {
     const exisitngPerson = await Person.findById(userId);
     if (exisitngPerson) {
-      res.json(exisitngPerson.exerciseList);
+      res.json(exisitngPerson.exerciseList.slice(0, limit));
     } else {
       res.json({ error: "user not found" });
     }
