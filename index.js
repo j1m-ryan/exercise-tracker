@@ -44,7 +44,7 @@ app.post("/api/exercise/add", async (req, res) => {
   const duration = req.body.duration;
   const date =
     req.body.date != undefined &&
-    moment(req.body.date, "DD-MM-YYYY", true).isValid()
+    moment(req.body.date, "DD/MM/YYYY", true).isValid()
       ? Date.parse(req.body.date).toString()
       : "No date given";
 
