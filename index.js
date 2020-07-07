@@ -50,7 +50,7 @@ app.post("/api/exercise/add", async (req, res) => {
   const date =
     req.body.date != undefined &&
     moment(req.body.date, "DD/MM/YYYY", true).isValid()
-      ? Date.parse(req.body.date).toString()
+      ? Date.parse(req.body.date)
       : Date.now();
 
   try {
@@ -76,8 +76,6 @@ app.post("/api/exercise/add", async (req, res) => {
 
 app.get("/api/exercise/log", async (req, res) => {
   const userId = req.query.userId;
-  const from = req.query.from;
-  const to = req.query.to;
   const limit = req.query.limit;
 
   try {
