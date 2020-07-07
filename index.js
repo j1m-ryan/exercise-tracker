@@ -18,6 +18,11 @@ app.get("/", (req, res) => {
   res.sendFile(fileLocation);
 });
 
+app.get("/api/exercise/users", async (req, res) => {
+  const allusers = await Person.find({}).exec();
+  res.json(allusers);
+});
+
 app.post("/api/exercise/new-user", async (req, res) => {
   const userName = req.body.username;
 
@@ -29,7 +34,7 @@ app.post("/api/exercise/new-user", async (req, res) => {
     } else {
       const newPerson = new Person({ name: userName });
       newPerson.save();
-      const personObj = { name: userName, id: newPerson._id };
+      const personObj = { username: userName, _id: newPerson._id };
       return res.json(personObj);
     }
   } catch (err) {
@@ -46,12 +51,12 @@ app.post("/api/exercise/add", async (req, res) => {
     req.body.date != undefined &&
     moment(req.body.date, "DD/MM/YYYY", true).isValid()
       ? Date.parse(req.body.date).toString()
-      : "No date given";
+      : Date.now();
 
   try {
-    const exisitngPerson = await Person.findById(userId);
-    if (exisitngPerson) {
-      await Person.update(exisitngPerson, {
+    const exisitngPerson = await Person.findByIdAndUpdate(
+      userId,
+      {
         $push: {
           exerciseList: {
             description: description,
@@ -59,11 +64,10 @@ app.post("/api/exercise/add", async (req, res) => {
             date: date,
           },
         },
-      });
-      return res.json({ success: "user found and updated" });
-    } else {
-      res.json({ error: "user not found" });
-    }
+      },
+      { new: true }
+    );
+    return res.json(exisitngPerson);
   } catch (err) {
     console.error(err);
     res.json({ error: "server error" });
